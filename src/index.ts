@@ -1,7 +1,7 @@
 import express, {type Request, type Response} from "express"
 import type {IAddress, IProduct} from "./types/index.js";
 
-const app = express()
+export const app = express()
 const port = process.env.PORT || 3000
 
 app.use(express.json())
@@ -57,24 +57,6 @@ app.get('/addresses/:id', (req: Request, res: Response) => {
     }
     res.json(queryAddress)
 })
-// Удалить данные
-app.delete('/products/:id', (req: Request, res: Response) => {
-    const id = req.params.id
-    if (!id) {
-        res.sendStatus(400)
-        return
-    } else {
-        for (let i = 0; i < products.length; i++) {
-            const product = products[i]
-            if (product && product.id === +id) {
-                products.splice(i, 1)
-                res.sendStatus(204)
-                return
-            }
-        }
-    }
-    res.sendStatus(404)
-})
 // Установить данные
 app.post('/products', (req: Request, res: Response) => {
     const newProduct: IProduct = {
@@ -99,6 +81,28 @@ app.put('/products/:id', (req: Request, res: Response) => {
         queryProduct.title = req.body.title
         res.status(201).json(queryProduct)
     }
+})
+// Удалить данные
+app.delete('/products/:id', (req: Request, res: Response) => {
+    const id = req.params.id
+    if (!id) {
+        res.sendStatus(400)
+        return
+    } else {
+        for (let i = 0; i < products.length; i++) {
+            const product = products[i]
+            if (product && product.id === +id) {
+                products.splice(i, 1)
+                res.sendStatus(204)
+                return
+            }
+        }
+    }
+    res.sendStatus(404)
+})
+app.delete("/__test__/data", (req, res) => {
+    products.splice(0, products.length)
+    res.sendStatus(204)
 })
 
 app.listen(port, () => {
