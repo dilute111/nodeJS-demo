@@ -59,6 +59,10 @@ app.get('/addresses/:id', (req: Request, res: Response) => {
 })
 // Установить данные
 app.post('/products', (req: Request, res: Response) => {
+    if (!req.body.title) {
+        res.sendStatus(400)
+        return
+    }
     const newProduct: IProduct = {
         id: products.length + 1,
         title: req.body.title
@@ -69,7 +73,7 @@ app.post('/products', (req: Request, res: Response) => {
 // Обновить данные
 app.put('/products/:id', (req: Request, res: Response) => {
     const id = req.params.id
-    if (!id) {
+    if (!id || !req.body.title) {
         res.sendStatus(400)
         return
     }
