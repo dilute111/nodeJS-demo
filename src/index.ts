@@ -1,34 +1,48 @@
 import express, {type Request, type Response} from "express"
-import type {IAddress, IProduct} from "./types/index.js";
+import type {
+    IAddress,
+    IProduct,
+    RequestBody,
+    RequestWithParams,
+    RequestWithParamsAndBody,
+    RequestWithQuery
+} from "./types";
+import type {CreateProductModel} from "./models/CreateProductModel";
+import type {UpdateProductModel} from "./models/UpdateProductModel";
+import type {QueryProductsModel} from "./models/QueryProductsModel";
+import type {ProductViewModel} from "./models/ProductViewModel";
 
 export const app = express()
 const port = process.env.PORT || 3000
 
 app.use(express.json())
 
-const products: IProduct[] = [
+export const products: IProduct[] = [
     {id: 1, title: "tomato"},
     {id: 2, title: "orange"},
 ]
-const addresses: IAddress[] = [
+export const addresses: IAddress[] = [
     {id: 1, value: "Nezalejnasti 12"},
     {id: 2, value: "Selickaga 11"},
 ]
 // Получить данные
-app.get('/', (req: Request, res: Response) => {
-    let helloMessage = 'Hello World!.EU!';
+app.get('/', (req: Request,
+              res: Response<string>) => {
+    let helloMessage = 'Hello World!';
     res.send(helloMessage)
 })
 
-app.get('/products', (req: Request, res: Response) => {
+app.get('/products', (req: RequestWithQuery<QueryProductsModel>,
+                      res: Response<ProductViewModel[]>) => {
     const title = req.query.title
-    if (title && typeof title === "string") {
+    if (title) {
         res.json(products.filter(p => p.title.toLowerCase().includes(title.toLowerCase())))
     } else {
         res.json(products)
     }
 })
-app.get('/products/:id', (req: Request, res: Response) => {
+app.get('/products/:id', (req: RequestWithParams<{id: string}>,
+                          res: Response<ProductViewModel>) => {
     const id = req.params.id
     if (!id) {
         res.sendStatus(400)
@@ -58,7 +72,8 @@ app.get('/addresses/:id', (req: Request, res: Response) => {
     res.json(queryAddress)
 })
 // Установить данные
-app.post('/products', (req: Request, res: Response) => {
+app.post('/products', (req: RequestBody<CreateProductModel>,
+                       res: Response<ProductViewModel>) => {
     if (!req.body.title) {
         res.sendStatus(400)
         return
@@ -71,7 +86,8 @@ app.post('/products', (req: Request, res: Response) => {
     res.status(201).json(newProduct)
 })
 // Обновить данные
-app.put('/products/:id', (req: Request, res: Response) => {
+app.put('/products/:id', (req: RequestWithParamsAndBody<{id: string}, UpdateProductModel>,
+                          res: Response<ProductViewModel | {error: string}>) => {
     const id = req.params.id
     if (!id || !req.body.title) {
         res.sendStatus(400)
@@ -83,11 +99,11 @@ app.put('/products/:id', (req: Request, res: Response) => {
         return
     } else {
         queryProduct.title = req.body.title
-        res.status(201).json(queryProduct)
+        res.status(200).json(queryProduct)
     }
 })
 // Удалить данные
-app.delete('/products/:id', (req: Request, res: Response) => {
+app.delete('/products/:id', (req: RequestWithParams<{id: string}>, res: Response) => {
     const id = req.params.id
     if (!id) {
         res.sendStatus(400)
