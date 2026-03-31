@@ -8,6 +8,7 @@ export type RequestWithParamsAndBody<T, B> = Request<T, {}, B>
 export interface IProduct {
     id: number
     title: string
+    productCount: number
 }
 export interface IAddress {
     id: number

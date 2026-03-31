@@ -11,6 +11,7 @@ import type {CreateProductModel} from "./models/CreateProductModel";
 import type {UpdateProductModel} from "./models/UpdateProductModel";
 import type {QueryProductsModel} from "./models/QueryProductsModel";
 import type {ProductViewModel} from "./models/ProductViewModel";
+import type {URIParamsProductIdModel} from "./models/URIParamsProductIdModel";
 
 export const app = express()
 const port = process.env.PORT || 3000
@@ -18,8 +19,8 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 
 export const products: IProduct[] = [
-    {id: 1, title: "tomato"},
-    {id: 2, title: "orange"},
+    {id: 1, title: "tomato", productCount: 7},
+    {id: 2, title: "orange", productCount: 10},
 ]
 export const addresses: IAddress[] = [
     {id: 1, value: "Nezalejnasti 12"},
@@ -35,13 +36,19 @@ app.get('/', (req: Request,
 app.get('/products', (req: RequestWithQuery<QueryProductsModel>,
                       res: Response<ProductViewModel[]>) => {
     const title = req.query.title
+    let filteredProducts = products
     if (title) {
-        res.json(products.filter(p => p.title.toLowerCase().includes(title.toLowerCase())))
-    } else {
-        res.json(products)
+        filteredProducts = products
+            .filter(p => p.title.toLowerCase().includes(title.toLowerCase()))
     }
+        res.json(filteredProducts.map(p => {
+            return {
+                id: p.id,
+                title: p.title
+            }
+        }))
 })
-app.get('/products/:id', (req: RequestWithParams<{id: string}>,
+app.get('/products/:id', (req: RequestWithParams<URIParamsProductIdModel>,
                           res: Response<ProductViewModel>) => {
     const id = req.params.id
     if (!id) {
@@ -53,7 +60,10 @@ app.get('/products/:id', (req: RequestWithParams<{id: string}>,
         res.sendStatus(404)
         return
     }
-    res.json(queryProduct)
+    res.json( {
+        id: queryProduct.id,
+        title: queryProduct.title,
+    })
 })
 app.get('/addresses', (req: Request, res: Response) => {
     res.json(addresses)
@@ -80,13 +90,17 @@ app.post('/products', (req: RequestBody<CreateProductModel>,
     }
     const newProduct: IProduct = {
         id: products.length + 1,
-        title: req.body.title
+        title: req.body.title,
+        productCount: 1
     }
     products.push(newProduct)
-    res.status(201).json(newProduct)
+    res.status(201).json({
+        id: newProduct.id,
+        title: newProduct.title,
+    })
 })
 // Обновить данные
-app.put('/products/:id', (req: RequestWithParamsAndBody<{id: string}, UpdateProductModel>,
+app.put('/products/:id', (req: RequestWithParamsAndBody<URIParamsProductIdModel, UpdateProductModel>,
                           res: Response<ProductViewModel | {error: string}>) => {
     const id = req.params.id
     if (!id || !req.body.title) {
@@ -103,7 +117,7 @@ app.put('/products/:id', (req: RequestWithParamsAndBody<{id: string}, UpdateProd
     }
 })
 // Удалить данные
-app.delete('/products/:id', (req: RequestWithParams<{id: string}>, res: Response) => {
+app.delete('/products/:id', (req: RequestWithParams<URIParamsProductIdModel>, res: Response) => {
     const id = req.params.id
     if (!id) {
         res.sendStatus(400)
