@@ -1,20 +1,24 @@
 import request from "supertest";
-import {app} from "../src";
+import * as productService from "../src/services/products.service";
+
 
 beforeAll(async () => {
-    await request(app).delete("/__test__/data")
+    productService.clearAllProducts()
+
 })
 
-beforeEach(async () => {  // 👈 ДОБАВЬ ЭТО
-    await request(app).delete("/__test__/data")
+beforeEach(async () => {
+    productService.clearAllProducts()
+
+
 })
 
 // Очистка после каждого теста
 afterEach(async () => {
-    await request(app).delete("/__test__/data")
+    productService.clearAllProducts()
 })
 
 // Очистка после всех тестов
 afterAll(async () => {
-    await request(app).delete("/__test__/data")
+    productService.clearAllProducts()
 })
