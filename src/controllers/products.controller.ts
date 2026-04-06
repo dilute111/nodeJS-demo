@@ -3,11 +3,17 @@ import type {QueryProductsModel} from "../models/QueryProductsModel";
 import type {Request, Response} from "express";
 import type {ProductViewModel} from "../models/ProductViewModel";
 import * as productService from "../services/products.service";
-import {getProductsViewModel} from "../app";
 import type {URIParamsProductIdModel} from "../models/URIParamsProductIdModel";
 import type {CreateProductModel} from "../models/CreateProductModel";
 import type {UpdateProductModel} from "../models/UpdateProductModel";
 
+
+const getProductsViewModel = (newProduct: IProduct): ProductViewModel => {
+    return {
+        id: newProduct.id,
+        title: newProduct.title,
+    }
+}
 
 export const getProducts = (req: RequestWithQuery<QueryProductsModel>,
                             res: Response<ProductViewModel[]>) => {
@@ -73,8 +79,3 @@ export const deleteProduct = (req: RequestWithParams<URIParamsProductIdModel>, r
     res.sendStatus(204)
 }
 
-export const clearTestData = (req: Request, res: Response) => {
-    console.log('🧹 clearTestData called')
-    productService.clearAllProducts()
-    res.sendStatus(204)
-}

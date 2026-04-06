@@ -4,13 +4,10 @@ import * as productService from "../src/services/products.service";
 
 beforeAll(async () => {
     productService.clearAllProducts()
-
 })
 
 beforeEach(async () => {
     productService.clearAllProducts()
-
-
 })
 
 // Очистка после каждого теста
