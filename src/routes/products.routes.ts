@@ -1,4 +1,4 @@
-import {Router} from "express";
+import express from "express";
 import {
     createProduct,
     deleteProduct,
@@ -6,22 +6,25 @@ import {
     getProductsById,
     updateProduct
 } from "../controllers/products.controller";
+import {IDbType} from "../types/db";
 
 
-const router = Router()
+export const getProductsRoutes = (db: IDbType) => {
+
+    const productsRouter = express.Router()
 
 // GET
-router.get('/', getProducts)
-router.get('/:id', getProductsById)
+    productsRouter.get('/', (req, res) =>  getProducts(req, res, db))
+    productsRouter.get('/:id', (req, res) =>  getProductsById(req, res, db))
 
 // POST
-router.post('/', createProduct)
+    productsRouter.post('/', (req, res) =>  createProduct(req, res, db))
 
 // PUT
-router.put('/:id', updateProduct)
+    productsRouter.put('/:id', (req, res) =>  updateProduct(req, res, db))
 
 // DELETE
-router.delete('/:id', deleteProduct)
+    productsRouter.delete('/:id', (req, res) =>  deleteProduct(req, res, db))
 
-
-export default router
+    return productsRouter
+}

@@ -1,5 +1,5 @@
-import {products} from "../db/db";
+import {db} from "../db/db";
 
 export const clearAllProducts = () => {
-    products.splice(0, products.length)
+    db.products.splice(0, db.products.length)
 }

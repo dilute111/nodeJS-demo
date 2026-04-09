@@ -1,6 +1,9 @@
-import type {IProduct} from "../types";
+import {IDbType} from "../types/db";
 
-export const products: IProduct[] = [
-    {id: 1, title: "tomato", productCount: 7},
-    {id: 2, title: "orange", productCount: 10},
-]
+
+export const db: IDbType = {
+    products: [
+        {id: 1, title: "tomato", productCount: 7},
+        {id: 2, title: "orange", productCount: 10},
+    ]
+}
