@@ -1,5 +1,5 @@
-import {db} from "../db/db";
+import {IDbType} from "../types/db";
 
-export const clearAllProducts = () => {
+export const clearAllProducts = (db: IDbType) => {
     db.products.splice(0, db.products.length)
 }

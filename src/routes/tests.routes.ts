@@ -1,7 +1,12 @@
-import {Express} from "express";
+import express from "express";
 import {clearTestData} from "../controllers/tests.controller";
+import {IDbType} from "../types/db";
 
 
-export const addTestsRoutes = (app: Express) => {
-    app.delete("/__test__/data", clearTestData)
+export const getTestsRouter = (db: IDbType) => {
+    const router = express.Router();
+
+    router.delete("/data", (req, res) => clearTestData(req, res, db))
+
+    return router
 }
