@@ -8,10 +8,9 @@ export const app = express()
 
 app.use(express.json())
 
-const productsRouter = getProductsRouter(db)
-const testsRouter = getTestsRouter(db)
-app.use("/products", productsRouter)
-app.use("/__test__", testsRouter)
+
+app.use("/products", getProductsRouter(db))
+app.use("/__test__", getTestsRouter(db))
 
 
 
