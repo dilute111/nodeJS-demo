@@ -1,6 +1,6 @@
 import request from "supertest"
-import type {CreateProductModel} from "../../src/models/CreateProductModel";
-import type {UpdateProductModel} from "../../src/models/UpdateProductModel";
+import type {CreateProductModel} from "../../src/models/productsModels/CreateProductModel";
+import type {UpdateProductModel} from "../../src/models/productsModels/UpdateProductModel";
 import {app} from "../../src/app";
 import HttpStatus from "../../src/constants/http-status";
 
