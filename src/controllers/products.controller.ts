@@ -2,11 +2,10 @@ import type {RequestBody, RequestWithParams, RequestWithParamsAndBody, RequestWi
 import type {QueryProductsModel} from "../models/productsModels/QueryProductsModel";
 import type {Response} from "express";
 import type {ProductViewModel} from "../models/productsModels/ProductViewModel";
-import * as productService from "../services/products.service";
 import type {URIParamsProductIdModel} from "../models/productsModels/URIParamsProductIdModel";
 import type {CreateProductModel} from "../models/productsModels/CreateProductModel";
 import type {UpdateProductModel} from "../models/productsModels/UpdateProductModel";
-import {IDbType, IProduct} from "../types/db";
+import {IProduct} from "../types/db";
 
 
 const getProductsViewModel = (newProduct: IProduct): ProductViewModel => {
@@ -24,8 +23,8 @@ export const getProducts = (req: RequestWithQuery<QueryProductsModel>,
     res.json(filteredProducts.map(getProductsViewModel))
 }
 
-export const getProductsById = (req: RequestWithParams<URIParamsProductIdModel>,
-                                res: Response<ProductViewModel>, productService: any) => {
+export const getProductById = (req: RequestWithParams<URIParamsProductIdModel>,
+                               res: Response<ProductViewModel>, productService: any) => {
     const {id} = req.params
     if (!id) {
         res.sendStatus(400)

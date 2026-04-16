@@ -1,9 +1,9 @@
 import express from "express";
 
-import {getTestsRouter} from "./routes/tests.routes";
-import {getProductsRouter} from "./routes/products.routes";
+import {getTestsRouter} from "./routes/tests.router";
+import {getProductsRouter} from "./routes/products.router";
 import {db} from "./db/db";
-import {getAddressesRouter} from "./routes/clients-addresses.routes";
+import {getAddressesRouter} from "./routes/clients-addresses.router";
 
 export const app = express()
 

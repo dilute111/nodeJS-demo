@@ -3,7 +3,7 @@ import {
     createProduct,
     deleteProduct,
     getProducts,
-    getProductsById,
+    getProductById,
     updateProduct
 } from "../controllers/products.controller";
 import {IDbType} from "../types/db";
@@ -17,7 +17,7 @@ export const getProductsRouter = (db: IDbType) => {
 
 // GET
     router.get('/', (req, res) =>  getProducts(req, res, productsService))
-    router.get('/:id', (req, res) =>  getProductsById(req, res, productsService))
+    router.get('/:id', (req, res) =>  getProductById(req, res, productsService))
 
 // POST
     router.post('/', (req, res) =>  createProduct(req, res, productsService))

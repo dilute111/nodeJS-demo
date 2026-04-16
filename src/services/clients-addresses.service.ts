@@ -1,9 +1,16 @@
 import {IDbType} from "../types/db";
+import {addressesRepository} from "../repositories/addresses.repository";
 
 
-export const getAllAddresses = (db: IDbType) => {
-    return db.addresses
-}
-export const getAddressById = (id: string, db: IDbType) => {
-    return db.addresses.find(a => a.id === +id)
+export const createAddressesService = (db: IDbType) => {
+    const repo = addressesRepository(db)
+
+    return {
+        getAllAddresses: () => {
+            return repo.findAllAddresses()
+        },
+        getAddressById: (id: string) => {
+            return repo.findAddress(+id)
+        },
+    }
 }
