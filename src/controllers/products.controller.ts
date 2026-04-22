@@ -14,7 +14,7 @@ const getProductsViewModel = (newProduct: IProduct): ProductViewModel => {
         title: newProduct.title,
     }
 }
-
+// GET
 export const getProducts = (req: RequestWithQuery<QueryProductsModel>,
                             res: Response<ProductViewModel[]>, productService: any) => {
     const {title} = req.query
@@ -26,10 +26,7 @@ export const getProducts = (req: RequestWithQuery<QueryProductsModel>,
 export const getProductById = (req: RequestWithParams<URIParamsProductIdModel>,
                                res: Response<ProductViewModel>, productService: any) => {
     const {id} = req.params
-    if (!id) {
-        res.sendStatus(400)
-        return
-    }
+
     const queryProduct = productService.getProductById(id)
     if (!queryProduct) {
         res.sendStatus(404)
@@ -37,18 +34,16 @@ export const getProductById = (req: RequestWithParams<URIParamsProductIdModel>,
     }
     res.json(getProductsViewModel(queryProduct))
 }
-
+// POST
 export const createProduct = (req: RequestBody<CreateProductModel>,
-                              res: Response<ProductViewModel>, productService: any) => {
+                              res: Response<ProductViewModel | {message: string}>,
+                              productService: any) => {
     const {title} = req.body
-    if (!title) {
-        res.sendStatus(400)
-        return
-    }
+
     const newProduct: IProduct = productService.createProduct(title)
     res.status(201).json(getProductsViewModel(newProduct))
 }
-
+// PUT
 export const updateProduct = (req: RequestWithParamsAndBody<URIParamsProductIdModel, UpdateProductModel>,
                               res: Response<ProductViewModel | {error: string}>, productService: any) => {
     const {id} = req.params
@@ -64,7 +59,7 @@ export const updateProduct = (req: RequestWithParamsAndBody<URIParamsProductIdMo
     }
     res.status(200).json(updateProduct)
 }
-
+// DELETE
 export const deleteProduct = (req: RequestWithParams<URIParamsProductIdModel>, res: Response, productService: any) => {
     const {id} = req.params
     if (!id) {

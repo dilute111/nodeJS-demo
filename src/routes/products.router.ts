@@ -1,4 +1,5 @@
 import express from "express";
+import { Request, Response } from "express";
 import {
     createProduct,
     deleteProduct,
@@ -8,6 +9,7 @@ import {
 } from "../controllers/products.controller";
 import {IDbType} from "../types/db";
 import {createProductsService} from "../services/products.service";
+import {validateCreateProduct, validateProductId} from "../validators/products.validator";
 
 
 export const getProductsRouter = (db: IDbType) => {
@@ -17,10 +19,10 @@ export const getProductsRouter = (db: IDbType) => {
 
 // GET
     router.get('/', (req, res) =>  getProducts(req, res, productsService))
-    router.get('/:id', (req, res) =>  getProductById(req, res, productsService))
+    router.get('/:id', validateProductId, (req: Request, res: Response) =>  getProductById(req as any, res, productsService))
 
 // POST
-    router.post('/', (req, res) =>  createProduct(req, res, productsService))
+    router.post('/', validateCreateProduct, (req: Request, res: Response) =>  createProduct(req, res, productsService))
 
 // PUT
     router.put('/:id', (req, res) =>  updateProduct(req, res, productsService))
