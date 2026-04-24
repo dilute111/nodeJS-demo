@@ -103,6 +103,14 @@ describe("/products",  () => {
         await request(app)
             .put(`/products/${-100}`)
             .send(data)
+            .expect(HttpStatus.BAD_REQUEST)
+    })
+    it("Should return 404 for product that's not exist", async () => {
+        let data: UpdateProductModel = { title: "good title"};
+
+        await request(app)
+            .put(`/products/${999}`)
+            .send(data)
             .expect(HttpStatus.NOT_FOUND)
     })
     it("Should update product with correct input data", async () => {

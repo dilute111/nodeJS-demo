@@ -45,13 +45,12 @@ export const createProduct = (req: RequestBody<CreateProductModel>,
 }
 // PUT
 export const updateProduct = (req: RequestWithParamsAndBody<URIParamsProductIdModel, UpdateProductModel>,
-                              res: Response<ProductViewModel | {error: string}>, productService: any) => {
+                              res: Response<ProductViewModel | {error: string}>,
+                              productService: any) => {
+
     const {id} = req.params
     const {title} = req.body
-    if (!id || !title) {
-        res.sendStatus(400)
-        return
-    }
+
     const updateProduct = productService.updateProduct(id, title)
     if (!updateProduct) {
         res.sendStatus(404)
@@ -62,10 +61,7 @@ export const updateProduct = (req: RequestWithParamsAndBody<URIParamsProductIdMo
 // DELETE
 export const deleteProduct = (req: RequestWithParams<URIParamsProductIdModel>, res: Response, productService: any) => {
     const {id} = req.params
-    if (!id) {
-        res.sendStatus(400)
-        return
-    }
+
     const deleted = productService.deleteProduct(id)
     if (!deleted) {
         res.sendStatus(404)

@@ -9,7 +9,12 @@ import {
 } from "../controllers/products.controller";
 import {IDbType} from "../types/db";
 import {createProductsService} from "../services/products.service";
-import {validateCreateProduct, validateProductId} from "../validators/products.validator";
+import {
+    validateCreateProduct,
+    validateGetProducts,
+    validateProductId,
+    validateUpdateProduct
+} from "../validators/products.validator";
 
 
 export const getProductsRouter = (db: IDbType) => {
@@ -18,17 +23,17 @@ export const getProductsRouter = (db: IDbType) => {
     const productsService = createProductsService(db)
 
 // GET
-    router.get('/', (req, res) =>  getProducts(req, res, productsService))
+    router.get('/', validateGetProducts, (req: Request, res: Response) =>  getProducts(req, res, productsService))
     router.get('/:id', validateProductId, (req: Request, res: Response) =>  getProductById(req as any, res, productsService))
 
 // POST
     router.post('/', validateCreateProduct, (req: Request, res: Response) =>  createProduct(req, res, productsService))
 
 // PUT
-    router.put('/:id', (req, res) =>  updateProduct(req, res, productsService))
+    router.put('/:id', validateUpdateProduct, (req: Request, res: Response) =>  updateProduct(req as any, res, productsService))
 
 // DELETE
-    router.delete('/:id', (req, res) =>  deleteProduct(req, res, productsService))
+    router.delete('/:id', validateProductId, (req: Request, res: Response) =>  deleteProduct(req as any, res, productsService))
 
     return router
 }
