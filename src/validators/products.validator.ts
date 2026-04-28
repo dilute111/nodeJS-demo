@@ -2,69 +2,48 @@ import {body, param, query, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import HttpStatus from "../constants/http-status";
 
+const titleValidation = body("title")
+        .notEmpty().withMessage("title is required")
+        .trim()
+        .isLength({min: 1, max: 30}).withMessage("title must be between 1 and 30 characters")
+
+const queryTitleValidation = query("title")
+    .optional()
+    .isString().withMessage("title must be a string")
+    .trim()
+    .isLength({min: 1, max: 30}).withMessage("title must be between 1 and 30 characters")
+
+const idValidation = param("id")
+    .isInt({min: 1}).withMessage("id must be a positive integer")
+
+const errorValidation = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()})
+        return
+    }
+    next()
+}
 
 export const validateGetProducts = [
-    query("title")
-        .optional()
-        .isString().withMessage("title must be a string")
-        .trim()
-        .isLength({min: 1}).withMessage("title cannot be empty"),
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()})
-            return
-        }
-        next()
-    }
+    queryTitleValidation,
+    errorValidation
 ]
 
 export const validateCreateProduct = [
-    body("title")
-        .notEmpty().withMessage("title is required")
-        .trim()
-        .isLength({min: 1}).withMessage("title cannot be empty"),
-
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()})
-            return
-        }
-        next()
-    }
+    titleValidation,
+    errorValidation
 ]
 
 export const validateProductId = [
-    param("id")
-        .isInt({min: 1}).withMessage("id must be a positive integer"),
-
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()})
-            return
-        }
-        next()
-    }
+    idValidation,
+    errorValidation
 ]
 
 export const validateUpdateProduct = [
-    param("id")
-        .isInt({min: 1}).withMessage("id must be a positive integer"),
-    body("title")
-        .notEmpty().withMessage("title is required")
-        .trim()
-        .isLength({min: 1}).withMessage("title cannot be empty"),
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req)
-
-        if (!errors.isEmpty()) {
-            res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()})
-            return
-        }
-        next()
-    }
+    idValidation,
+    titleValidation,
+    errorValidation
 ]
 
 
