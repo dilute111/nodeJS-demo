@@ -1,6 +1,5 @@
-import {body, param, query, validationResult} from "express-validator";
-import {NextFunction, Request, Response} from "express";
-import HttpStatus from "../constants/http-status";
+import {body, param, query} from "express-validator";
+import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 
 const titleValidation = body("title")
         .notEmpty().withMessage("title is required")
@@ -16,34 +15,27 @@ const queryTitleValidation = query("title")
 const idValidation = param("id")
     .isInt({min: 1}).withMessage("id must be a positive integer")
 
-const errorValidation = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json({errors: errors.array()})
-        return
-    }
-    next()
-}
+
 
 export const validateGetProducts = [
     queryTitleValidation,
-    errorValidation
+    inputValidationMiddleware
 ]
 
 export const validateCreateProduct = [
     titleValidation,
-    errorValidation
+    inputValidationMiddleware
 ]
 
 export const validateProductId = [
     idValidation,
-    errorValidation
+    inputValidationMiddleware
 ]
 
 export const validateUpdateProduct = [
     idValidation,
     titleValidation,
-    errorValidation
+    inputValidationMiddleware
 ]
 
 

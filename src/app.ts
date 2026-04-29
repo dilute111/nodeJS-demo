@@ -16,6 +16,17 @@ app.use(requestCounterMiddleware)
 
 app.use(express.json())
 
+/* TODO: вынести логику авторизации по токену во что-то реально работоспособное
+    Сейчас используется упрощенная проверка ?token=123
+    План:
+    1. Создать эндпоинт POST /login для получения токена
+    2. Сохранять токен на клиенте (localStorage)
+    3. Передавать токен в заголовке Authorization
+    4. Проверять токен через middleware
+    Пример использования на фронте:
+    localStorage.setItem('token', 'my-token')
+    fetch(url, { headers: { 'Authorization': localStorage.getItem('token') } })
+*/
 //const authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
 //    if (req.query.token === "123") {
 //        next()
